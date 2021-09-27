@@ -131,6 +131,5 @@ local.settings.json
 .python_packages
 
 # VScode
-.vscode/
 
 LeagueOwnersSample.csv
