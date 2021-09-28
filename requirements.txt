@@ -1,5 +1,16 @@
-# DO NOT include azure-functions-worker in this file
-# The Python Worker is managed by Azure Functions platform
-# Manually managing azure-functions-worker may cause unexpected issues
-
-azure-functions
+azure-functions==1.7.2
+certifi==2021.5.30
+charset-normalizer==2.0.6
+dnacentersdk==2.3.2
+fastjsonschema==2.15.1
+flake8==3.9.2
+future==0.18.2
+idna==3.2
+mccabe==0.6.1
+pycodestyle==2.7.0
+pyflakes==2.3.1
+PyJWT==2.1.0
+requests==2.26.0
+requests-toolbelt==0.9.1
+urllib3==1.26.7
+webexteamssdk==1.6
