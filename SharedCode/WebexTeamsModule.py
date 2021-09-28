@@ -48,9 +48,6 @@ class WebexTeams():
         """
             Create or update the webhooks with the supplied URL
         """
-
-        target_url = f'{target_url}/webexbot'
-
         existing_webhooks = self.api.webhooks.list()
 
         # delete existing webhooks
