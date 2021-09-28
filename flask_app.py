@@ -32,7 +32,7 @@ if __name__ == '__main__':
         with open('Flask_Config_Env.json') as json_file:
             json_data = json.load(json_file)
 
-            environ.update(json_data['Values'])
+            environ.update(json_data)
     except FileNotFoundError:
         pass
 
