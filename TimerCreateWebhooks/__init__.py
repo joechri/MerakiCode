@@ -33,7 +33,7 @@ def main(mytimer: func.TimerRequest) -> None:
 
         teams_api = WebexTeams(access_token=environ['WEBEX_TEAMS_ACCESS_TOKEN'])
 
-        if __name__ == '__main__':
+        if __name__ == '__main__' or environ.get('RUNNING_AS_FLASK_APP'):
 
             logger.info('Running as local script, looking for ngrok tunnel')
 

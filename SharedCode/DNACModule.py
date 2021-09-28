@@ -1,4 +1,5 @@
 import logging
+from os import environ
 
 from dnacentersdk import DNACenterAPI
 from dnacentersdk.exceptions import ApiError
@@ -10,7 +11,14 @@ class DNAC():
 
     def __init__(self):
 
-        self.api = DNACenterAPI()
+        verify = environ['DNA_CENTER_VERIFY'].lower() == 'true'
+
+        self.api = DNACenterAPI(
+            base_url=environ['DNA_CENTER_BASE_URL'],
+            username=environ['DNA_CENTER_USERNAME'],
+            password=environ['DNA_CENTER_PASSWORD'],
+            verify=verify
+        )
 
     def get_devices_for_card(self):
 

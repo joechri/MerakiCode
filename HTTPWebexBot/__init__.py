@@ -28,7 +28,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         data = req.get_json()
 
-        logger.info(f'Data: {data}')
+        # logger.info(f'Data: {data}')
 
         if data['resource'] == 'messages' and data['event'] == 'created':
 
