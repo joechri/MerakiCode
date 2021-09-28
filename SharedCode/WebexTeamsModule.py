@@ -248,7 +248,16 @@ class WebexTeams():
                         ]
                     }
                 ],
-                'actions': []
+                'actions': [
+                    {
+                        'type': 'Action.Submit',
+                        'title': 'Get Config',
+                        'data': {
+                            'next_action': 'get_device_config',
+                            'device_choice': details['id']
+                        }
+                    }
+                ]
             }
         }
 
