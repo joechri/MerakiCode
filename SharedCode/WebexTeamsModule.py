@@ -60,8 +60,7 @@ class WebexTeams():
             name=webhook_name,
             targetUrl=target_url,
             resource='messages',
-            event='created',
-            # filter=f'roomId={teams_bot.room_id}'
+            event='created'
         )
 
         # attachment submit webhook
@@ -70,8 +69,7 @@ class WebexTeams():
             name=webhook_name,
             targetUrl=target_url,
             resource='attachmentActions',
-            event='created',
-            # filter=f'roomId={teams_bot.room_id}'
+            event='created'
         )
 
     def send_default_card(self, text=None, person_email=None, room_id=None):
