@@ -209,10 +209,6 @@ class WebexTeams():
                                     {
                                         'type': 'TextBlock',
                                         'text': 'Uptime:'
-                                    },
-                                    {
-                                        'type': 'TextBlock',
-                                        'text': 'Location:'
                                     }
                                 ]
                             },
@@ -238,10 +234,6 @@ class WebexTeams():
                                     {
                                         'type': 'TextBlock',
                                         'text': details['upTime']
-                                    },
-                                    {
-                                        'type': 'TextBlock',
-                                        'text': details['location']
                                     }
                                 ]
                             }
@@ -256,8 +248,67 @@ class WebexTeams():
                             'next_action': 'get_device_config',
                             'device_choice': details['id']
                         }
+                    },
+                    {
+                        'type': 'Action.ShowCard',
+                        'title': 'Run Command',
+                        'card': {
+                            'type': 'AdaptiveCard',
+                            'body': [
+                                {
+                                    'type': 'Input.Text',
+                                    'id': 'text_command',
+                                    'placeholder': 'Enter command',
+                                    'inlineAction': {
+                                        'type': 'Action.Submit',
+                                        'title': 'Enter',
+                                        'data': {
+                                            'next_action': 'run_command',
+                                            'device_choice': details['id']
+                                        }
+                                    }
+                                }
+                            ],
+                            'actions': []
+                        }
                     }
                 ]
+            }
+        }
+
+        self.send_message('Run Command Card', person_email=person_email, room_id=room_id, attachments=[card])
+
+    def send_device_command_card(self, details, person_email=None, room_id=None):
+
+        card = {
+            'contentType': 'application/vnd.microsoft.card.adaptive',
+            'content': {
+                '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+                'type': 'AdaptiveCard',
+                'version': '1.2',
+                'body': [
+                    {
+                        'type': 'TextBlock',
+                        'text': details['hostname'],
+                        'size': 'Medium',
+                        'weight': 'Bolder',
+                        'wrap': True
+                    },
+                    {
+                        'type': 'Input.Text',
+                        'id': 'text_command',
+                        'placeholder': 'Enter command',
+                        'inlineAction': {
+                            'type': 'Action.Submit',
+                            'title': 'Enter',
+                            'data': {
+                                'next_action': 'run_command',
+                                'device_choice': details['id']
+                            }
+                        }
+                    }
+                ],
+                'actions': []
             }
         }
 

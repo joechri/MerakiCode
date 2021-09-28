@@ -95,6 +95,24 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
                 return func.HttpResponse('Done', mimetype='text/html')
 
+            elif action.inputs.get('next_action') == 'run_command':
+
+                d_id = action.json_data['inputs']['device_choice']
+                command = action.json_data['inputs']['text_command']
+
+                result = dnac_api.run_command_on_device(d_id, command)
+
+                if result:
+                    teams_api.send_message(markdown=result, person_email=person_email)
+                else:
+                    teams_api.send_message(markdown='Command unsuccessful', person_email=person_email)
+
+                # resend the details card
+                details = dnac_api.get_device_details_for_card(d_id=action.inputs.get('device_choice'))
+                teams_api.send_device_command_card(details=details, person_email=person_email)
+
+                return func.HttpResponse('Done', mimetype='text/html')
+
             return func.HttpResponse('Done', mimetype='text/html')
 
     except Exception as e:

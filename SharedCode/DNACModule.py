@@ -1,5 +1,8 @@
+import json
 import logging
+from json import JSONDecodeError
 from os import environ
+from time import sleep
 
 from dnacentersdk import DNACenterAPI
 from dnacentersdk.exceptions import ApiError
@@ -45,3 +48,31 @@ class DNAC():
             if e.status_code == 501:
                 logger.warning(f'ApiError getting config: {e}')
                 return None
+
+    def run_command_on_device(self, d_id, command):
+
+        r = self.api.command_runner.run_read_only_commands_on_devices(
+            commands=[command], deviceUuids=[d_id], description='Run from Webex Bot'
+        )
+
+        for _ in range(60):
+
+            progress = self.api.task.get_task_by_id(r['response']['taskId'])
+
+            try:
+                f_id = json.loads(progress['response']['progress'])['fileId']
+                break
+            except JSONDecodeError:
+                logger.info(f"Progress: {progress['response']['progress']}")
+                sleep(1)
+
+        file_resp = self.api.file.download_a_file_by_fileid(f_id)
+
+        data = json.loads(file_resp.data)[0]
+
+        if data['commandResponses']['SUCCESS']:
+            for output in data['commandResponses']['SUCCESS'].values():
+                return "```" + output
+
+        # if the command was not successful
+        return None
