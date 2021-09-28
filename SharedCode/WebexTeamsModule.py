@@ -1,5 +1,8 @@
 import logging
+from time import sleep
 
+import requests
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 from webexteamssdk import WebexTeamsAPI
 
 logger = logging.getLogger()
@@ -250,3 +253,51 @@ class WebexTeams():
         }
 
         self.send_message('Device Details Card', person_email=person_email, room_id=room_id, attachments=[card])
+
+    def send_device_config(self, config, person_email=None, room_id=None):
+
+        if config is None:
+            self.send_message(
+                'No configuration available for device (might be an AP)', person_email=person_email, room_id=room_id)
+            return
+
+        try:
+
+            if person_email:
+
+                m = MultipartEncoder(
+                    {
+                        'toPersonEmail': person_email,
+                        'markdown': 'config',
+                        'files': ('config.txt', config, 'text/plain')
+                    }
+                )
+            elif room_id:
+
+                m = MultipartEncoder(
+                    {
+                        'roomId': room_id,
+                        'markdown': 'config',
+                        'files': ('config.txt', config, 'text/plain')
+                    }
+                )
+            else:
+                return
+
+            for _ in range(5):
+                r = requests.post(
+                    f'{self.api.base_url}messages',
+                    data=m,
+                    headers={
+                        'Authorization': f'Bearer {self.api.access_token}',
+                        'Content-Type': m.content_type}
+                )
+
+                if r.status_code == 200:
+                    break
+
+                sleep(3)
+
+        except Exception as e:
+            logger.warning(
+                f'Exception occurred while trying to send message: {e}')

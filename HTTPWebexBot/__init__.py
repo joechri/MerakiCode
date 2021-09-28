@@ -87,6 +87,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
                 return func.HttpResponse('Done', mimetype='text/html')
 
+            elif action.inputs.get('next_action') == 'get_device_config':
+
+                config = dnac_api.get_device_config_for_card(d_id=action.inputs.get('device_choice'))
+
+                teams_api.send_device_config(config=config, person_email=person_email)
+
+                return func.HttpResponse('Done', mimetype='text/html')
+
             return func.HttpResponse('Done', mimetype='text/html')
 
     except Exception as e:
