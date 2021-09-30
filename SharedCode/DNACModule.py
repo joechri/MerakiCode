@@ -76,3 +76,21 @@ class DNAC():
 
         # if the command was not successful
         return None
+
+    def get_user_enrichment_for_card(self, username):
+
+        d = self.api.users.get_user_enrichment_details({'entity_type': 'network_user_id', 'entity_value': username})
+
+        return d[0]
+
+    def get_issues_for_card(self, priority=None):
+        """
+            priority (str): p1, p2, p3, p4
+        """
+
+        d = self.api.issues.issues(priority=priority, issue_status='active')
+
+        # sort the issues by most recent first
+        return sorted(
+            d['response'], key=lambda x: x['last_occurence_time'], reverse=True
+        )

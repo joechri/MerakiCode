@@ -113,6 +113,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
                 return func.HttpResponse('Done', mimetype='text/html')
 
+            elif action.inputs.get('next_action') == 'get_issues':
+
+                max_issues = action.inputs.get('max_issues')
+                priority = action.inputs.get('issue_priority')
+
+                issues = dnac_api.get_issues_for_card(priority=priority)[:max_issues - 1]
+
+                teams_api.send_issue_list_card(
+                    text=f'{priority.upper()} issues:', issue_list=issues, person_email=person_email)
+
+                return func.HttpResponse('Done', mimetype='text/html')
+
             return func.HttpResponse('Done', mimetype='text/html')
 
     except Exception as e:

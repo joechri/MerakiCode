@@ -102,12 +102,43 @@ class WebexTeams():
                         'data': {
                             'next_action': 'list_devices'
                         }
+                    },
+                    # {
+                    #     'type': 'Action.ShowCard',
+                    #     'title': 'User Health',
+                    #     'card': {
+                    #         'type': 'AdaptiveCard',
+                    #         'body': [
+                    #             {
+                    #                 'type': 'Input.Text',
+                    #                 'id': 'username_input',
+                    #                 'placeholder': 'Enter username',
+                    #                 'inlineAction': {
+                    #                     'type': 'Action.Submit',
+                    #                     'title': 'Enter',
+                    #                     'data': {
+                    #                         'next_action': 'user_enrichment'
+                    #                     }
+                    #                 }
+                    #             }
+                    #         ],
+                    #         'actions': []
+                    #     }
+                    # }
+                    {
+                        'type': 'Action.Submit',
+                        'title': 'P1 Issues',
+                        'data': {
+                            'next_action': 'get_issues',
+                            'max_issues': 10,
+                            'issue_priority': 'p1'
+                        }
                     }
                 ]
             }
         }
 
-        self.send_message('Default Card', person_email=person_email, room_id=room_id, attachments=[card])
+        self.send_message('Landing Card', person_email=person_email, room_id=room_id, attachments=[card])
 
     def send_device_list_card(self, text=None, device_list=[], person_email=None, room_id=None):
 
@@ -361,3 +392,38 @@ class WebexTeams():
         except Exception as e:
             logger.warning(
                 f'Exception occurred while trying to send message: {e}')
+
+    def send_issue_list_card(self, text=None, issue_list=[], person_email=None, room_id=None):
+
+        if text is None:
+            text = 'Issues:'
+
+        body = [
+            {
+                'type': 'TextBlock',
+                'text': f"- {x['name']}",
+                'wrap': True
+            } for x in issue_list
+        ]
+
+        body.insert(0, {
+                'type': 'TextBlock',
+                'text': text,
+                'size': 'Medium',
+                'weight': 'Bolder',
+                'wrap': True
+            }
+        )
+
+        card = {
+            'contentType': 'application/vnd.microsoft.card.adaptive',
+            'content': {
+                '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+                'type': 'AdaptiveCard',
+                'version': '1.2',
+                'body': body,
+                'actions': []
+            }
+        }
+
+        self.send_message('Issues Card', person_email=person_email, room_id=room_id, attachments=[card])
