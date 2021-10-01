@@ -38,12 +38,18 @@ def main(mytimer: func.TimerRequest) -> None:
             logger.info('Running as local script, looking for ngrok tunnel')
 
             try:
-                # get the ngrok tunnel
-                r = requests.get('http://localhost:4040/api/tunnels')
 
-                tunnels = r.json()
+                # if we've set the environ variable for the ngrok tunnel, use that
+                if type(environ.get('NGROK_FLASK_PUBLIC_URL')) is str:
+                    ngrok_url = environ.get('NGROK_FLASK_PUBLIC_URL') + '/webexbot'
 
-                ngrok_url = tunnels['tunnels'][0]['public_url'] + '/webexbot'
+                else:
+                    # otherwise, find the first tunnel that's running
+                    r = requests.get('http://localhost:4040/api/tunnels')
+
+                    tunnels = r.json()
+
+                    ngrok_url = tunnels['tunnels'][0]['public_url'] + '/webexbot'
 
             except Exception:
                 ngrok_url = None

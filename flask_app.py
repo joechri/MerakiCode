@@ -2,12 +2,14 @@ import json
 from os import environ
 
 import azure.functions as func
-from flask import Flask, request, make_response
+from flask import Flask, make_response, request
+from pyngrok import ngrok
 
 from HTTPWebexBot import main as main_http_func
 from TimerCreateWebhooks import main as update_webhooks
 
 app = Flask(__name__)
+flask_port = 5000
 
 
 @app.route('/webexbot', methods=['POST'])
@@ -51,7 +53,18 @@ if __name__ == '__main__':
         def __init__(self):
             self.past_due = False
 
+    # create an ngrok tunnel
+    http_tunnel = ngrok.connect(addr=flask_port, proto='http')
+
+    # the tunnel is going to be created showing an http address
+    # but ngrok will actually create both http and https so we'll
+    # want to use the secured tunnel
+    webhook_url = http_tunnel.public_url.replace('http://', 'https://')
+
+    # save the url to an environment variable to use
+    environ['NGROK_FLASK_PUBLIC_URL'] = webhook_url
+
     # update the webhooks
     update_webhooks(MockTimer())
 
-    app.run()
+    app.run(host='0.0.0.0', port=flask_port)
