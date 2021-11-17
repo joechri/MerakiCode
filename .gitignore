@@ -131,6 +131,6 @@ local.settings.json
 .python_packages
 
 # VScode
-.VScode
+.vscode
 
 zTest.py
