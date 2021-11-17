@@ -148,7 +148,7 @@ class WebexTeams():
                                     },
                                     {
                                         'type': 'TextBlock',
-                                        'text': data['organizationUrl']
+                                        'text': f"[Org Link]({data['organizationUrl']})"
                                     },
                                     {
                                         'type': 'TextBlock',
@@ -156,7 +156,7 @@ class WebexTeams():
                                     },
                                     {
                                         'type': 'TextBlock',
-                                        'text': data['networkUrl']
+                                        'text': f"[Network Link]({data['networkUrl']})"
                                     },
                                     {
                                         'type': 'TextBlock',
